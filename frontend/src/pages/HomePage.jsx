@@ -69,12 +69,12 @@ const HomePage = () => {
             categories.forEach((category) => {
                 switch (category) {
                     case 'income':
-                        backgroundColors.push('rgba(75, 192, 192)');
-                        borderColors.push('rgba(75, 192, 192)');
+                        backgroundColors.push('rgba(74, 222, 128)');
+                        borderColors.push('rgba(74, 222, 128)');
                         break;
                     case 'saving':
-                        backgroundColors.push('rgba(255, 206, 86)');
-                        borderColors.push('rgba(255, 206, 86)');
+                        backgroundColors.push('rgba(34, 211, 238)');
+                        borderColors.push('rgba(34, 211, 238)');
                         break;
                     case 'expense':
                         backgroundColors.push('rgba(255, 99, 132)');

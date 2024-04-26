@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const URL = process.env.URL;
-console.log('URL:', URL);
 
 const job = new cron.CronJob('*/15 * * * *', function () {
     https
