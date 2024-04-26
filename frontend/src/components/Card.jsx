@@ -82,8 +82,16 @@ const Card = ({ transaction, authUser }) => {
                     Location: {location || 'N/A'}
                 </p>
                 <div className="flex justify-between items-center">
-                    <p className="text-xs text-black font-bold">
-                        {formattedDate}
+                    <p
+                        className={`text-xs  ${
+                            formattedDate == formatDate(Date.now())
+                                ? 'text-gray-700'
+                                : 'text-black'
+                        } font-bold`}
+                    >
+                        {formattedDate == formatDate(Date.now())
+                            ? `${formattedDate}(Today)`
+                            : formattedDate}
                     </p>
                     <img
                         src={authUser?.profilePicture}

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
     GET_TRANSACTION,
     GET_TRANSACTION_STATISTICS,
@@ -11,6 +11,7 @@ import TransactionFormSkeleton from '../components/skeletons/TransactionFormSkel
 
 const TransactionPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { loading, data } = useQuery(GET_TRANSACTION, {
         variables: { id: id },
     });
@@ -47,7 +48,12 @@ const TransactionPage = () => {
                         transactionId: id,
                     },
                 },
+            }).then(() => {
+                setTimeout(() => {
+                    navigate('/');
+                }, 400);
             });
+
             toast.success('Transaction updated successfully');
         } catch (error) {
             toast.error(error.message);
@@ -234,14 +240,24 @@ const TransactionPage = () => {
                     </div>
                 </div>
                 {/* SUBMIT BUTTON */}
-                <button
-                    className="text-white font-bold w-full rounded px-4 py-2 bg-gradient-to-br
-          from-pink-500 to-pink-500 hover:from-pink-600 hover:to-pink-600"
-                    type="submit"
-                    disabled={loadingUpdate}
-                >
-                    {loadingUpdate ? 'Updating...' : 'Update Transaction'}
-                </button>
+                <div className="w-full flex gap-4">
+                    <button
+                        className="text-white font-bold w-3/5 rounded px-4 py-2 bg-gradient-to-br
+              from-pink-500 to-pink-500 hover:from-pink-600 hover:to-pink-600"
+                        type="submit"
+                        disabled={loadingUpdate}
+                    >
+                        {loadingUpdate ? 'Updating...' : 'Update Transaction'}
+                    </button>
+                    <Link
+                        className="text-white font-bold w-1/3 rounded px-4 py-2 bg-gradient-to-br text-center
+                        border-2 border-red-400 hover:from-red-600 hover:to-red-600 disabled:opacity-70 disabled:cursor-not-allowed"
+                        type="button"
+                        to={'/'}
+                    >
+                        Cancel
+                    </Link>
+                </div>
             </form>
         </div>
     );
