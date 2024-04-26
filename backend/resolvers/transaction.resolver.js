@@ -1,37 +1,37 @@
-import Transaction from '../models/transaction.model.js';
-import User from '../models/user.model.js';
+import Transaction from "../models/transaction.model.js"
+import User from "../models/user.model.js"
 
 const transactionResolver = {
     Query: {
         transactions: async (_, __, context) => {
             try {
-                if (!context.getUser()) throw new Error('Unauthorized');
-                const userId = await context.getUser()._id;
+                if (!context.getUser()) throw new Error("Unauthorized")
+                const userId = await context.getUser()._id
 
                 const transactions = await Transaction.find({ userId }).sort({
-                    date: -1,
-                });
-                return transactions;
+                    date: -1
+                })
+                return transactions
             } catch (err) {
-                console.error('Error getting transactions:', err);
-                throw new Error('Error getting transactions');
+                console.error("Error getting transactions:", err)
+                throw new Error("Error getting transactions")
             }
         },
         transaction: async (_, { transactionId }) => {
             try {
-                const transaction = await Transaction.findById(transactionId);
-                return transaction;
+                const transaction = await Transaction.findById(transactionId)
+                return transaction
             } catch (err) {
-                console.error('Error getting transaction:', err);
-                throw new Error('Error getting transaction');
+                console.error("Error getting transaction:", err)
+                throw new Error("Error getting transaction")
             }
         },
         categoryStatistics: async (_, __, context) => {
-            if (!context.getUser()) throw new Error('Unauthorized');
+            if (!context.getUser()) throw new Error("Unauthorized")
 
-            const userId = context.getUser()._id;
-            const transactions = await Transaction.find({ userId });
-            const categoryMap = {};
+            const userId = context.getUser()._id
+            const transactions = await Transaction.find({ userId })
+            const categoryMap = {}
 
             // const transactions = [
             // 	{ category: "expense", amount: 50 },
@@ -43,31 +43,31 @@ const transactionResolver = {
 
             transactions.forEach((transaction) => {
                 if (!categoryMap[transaction.category]) {
-                    categoryMap[transaction.category] = 0;
+                    categoryMap[transaction.category] = 0
                 }
-                categoryMap[transaction.category] += transaction.amount;
-            });
+                categoryMap[transaction.category] += transaction.amount
+            })
 
             // categoryMap = { expense: 125, investment: 100, saving: 50 }
 
             return Object.entries(categoryMap).map(
                 ([category, totalAmount]) => ({ category, totalAmount })
-            );
+            )
             // return [ { category: "expense", totalAmount: 125 }, { category: "investment", totalAmount: 100 }, { category: "saving", totalAmount: 50 } ]
-        },
+        }
     },
     Mutation: {
         createTransaction: async (_, { input }, context) => {
             try {
                 const newTransaction = new Transaction({
                     ...input,
-                    userId: context.getUser()._id,
-                });
-                await newTransaction.save();
-                return newTransaction;
+                    userId: context.getUser()._id
+                })
+                await newTransaction.save()
+                return newTransaction
             } catch (err) {
-                console.error('Error creating transaction:', err);
-                throw new Error('Error creating transaction');
+                console.error("Error creating transaction:", err)
+                throw new Error("Error creating transaction")
             }
         },
         updateTransaction: async (_, { input }) => {
@@ -76,39 +76,38 @@ const transactionResolver = {
                     input.transactionId,
                     input,
                     {
-                        new: true,
+                        new: true
                     }
-                );
-                return updatedTransaction;
+                )
+                return updatedTransaction
             } catch (err) {
-                console.error('Error updating transaction:', err);
-                throw new Error('Error updating transaction');
+                console.error("Error updating transaction:", err)
+                throw new Error("Error updating transaction")
             }
         },
         deleteTransaction: async (_, { transactionId }) => {
             try {
-                const deletedTransaction = await Transaction.findByIdAndDelete(
-                    transactionId
-                );
-                return deletedTransaction;
+                const deletedTransaction =
+                    await Transaction.findByIdAndDelete(transactionId)
+                return deletedTransaction
             } catch (err) {
-                console.error('Error deleting transaction:', err);
-                throw new Error('Error deleting transaction');
+                console.error("Error deleting transaction:", err)
+                throw new Error("Error deleting transaction")
             }
-        },
+        }
     },
     Transaction: {
         user: async (parent) => {
-            const userId = parent.userId;
+            const userId = parent.userId
             try {
-                const user = await User.findById(userId);
-                return user;
+                const user = await User.findById(userId)
+                return user
             } catch (err) {
-                console.error('Error getting user:', err);
-                throw new Error('Error getting user');
+                console.error("Error getting user:", err)
+                throw new Error("Error getting user")
             }
-        },
-    },
-};
+        }
+    }
+}
 
-export default transactionResolver;
+export default transactionResolver

@@ -1,39 +1,39 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose"
 
 const transactionSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+        ref: "User",
+        required: true
     },
     description: {
         type: String,
-        required: true,
+        required: true
     },
     paymentType: {
         type: String,
-        enum: ['cash', 'card'],
-        required: true,
+        enum: ["cash", "card"],
+        required: true
     },
     category: {
         type: String,
-        enum: ['income', 'saving', 'expense', 'investment'],
-        required: true,
+        enum: ["income", "saving", "expense", "investment"],
+        required: true
     },
     amount: {
         type: Number,
-        required: true,
+        required: true
     },
     location: {
         type: String,
-        default: 'Unknown',
+        default: "Unknown"
     },
     date: {
         type: Date,
-        required: true,
-    },
-});
+        required: true
+    }
+})
 
-const Transaction = mongoose.model('Transaction', transactionSchema);
+const Transaction = mongoose.model("Transaction", transactionSchema)
 
-export default Transaction;
+export default Transaction

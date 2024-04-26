@@ -1,92 +1,92 @@
-import { FaLocationDot } from 'react-icons/fa6';
-import { BsCardText } from 'react-icons/bs';
-import { MdOutlinePayments } from 'react-icons/md';
-import { FaSackDollar } from 'react-icons/fa6';
-import { FaTrash } from 'react-icons/fa';
-import { HiPencilAlt } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
-import { formatDate } from '../utils/formatDate';
-import toast from 'react-hot-toast';
-import { useMutation } from '@apollo/client';
-import { DELETE_TRANSACTION } from '../graphql/mutations/transcation.mutation';
+import { FaLocationDot } from "react-icons/fa6"
+import { BsCardText } from "react-icons/bs"
+import { MdOutlinePayments } from "react-icons/md"
+import { FaSackDollar } from "react-icons/fa6"
+import { FaTrash } from "react-icons/fa"
+import { HiPencilAlt } from "react-icons/hi"
+import { Link } from "react-router-dom"
+import { formatDate } from "../utils/formatDate"
+import toast from "react-hot-toast"
+import { useMutation } from "@apollo/client"
+import { DELETE_TRANSACTION } from "../graphql/mutations/transcation.mutation"
 
 const categoryColorMap = {
-    income: 'from-green-700 to-green-400',
-    saving: 'from-cyan-700 to-cyan-400',
-    expense: 'from-pink-800 to-pink-600',
-    investment: 'from-indigo-700 to-indigo-400',
+    income: "from-green-700 to-green-400",
+    saving: "from-cyan-700 to-cyan-400",
+    expense: "from-pink-800 to-pink-600",
+    investment: "from-indigo-700 to-indigo-400"
     // Add more categories and corresponding color classes as needed
-};
+}
 
 const Card = ({ transaction, authUser }) => {
     let { category, amount, location, date, paymentType, description } =
-        transaction;
-    const cardClass = categoryColorMap[category];
+        transaction
+    const cardClass = categoryColorMap[category]
     const [deleteTransaction, { loading }] = useMutation(DELETE_TRANSACTION, {
-        refetchQueries: ['GetTransactions', 'GetTransactionStatistics'],
-    });
+        refetchQueries: ["GetTransactions", "GetTransactionStatistics"]
+    })
 
     // Capitalize the first letter of the description
-    description = description[0]?.toUpperCase() + description.slice(1);
-    category = category[0]?.toUpperCase() + category.slice(1);
-    paymentType = paymentType[0]?.toUpperCase() + paymentType.slice(1);
+    description = description[0]?.toUpperCase() + description.slice(1)
+    category = category[0]?.toUpperCase() + category.slice(1)
+    paymentType = paymentType[0]?.toUpperCase() + paymentType.slice(1)
 
-    const formattedDate = formatDate(date);
+    const formattedDate = formatDate(date)
 
     const handleDelete = async () => {
         try {
             await deleteTransaction({
-                variables: { transactionId: transaction._id },
-            });
-            toast.success('Transaction deleted successfully');
+                variables: { transactionId: transaction._id }
+            })
+            toast.success("Transaction deleted successfully")
         } catch (error) {
-            console.error('Error deleting transaction:', error);
-            toast.error(error.message);
+            console.error("Error deleting transaction:", error)
+            toast.error(error.message)
         }
-    };
+    }
 
     return (
         <div className={`rounded-md p-4 bg-gradient-to-br ${cardClass} `}>
-            <div className="flex flex-col gap-3">
-                <div className="flex flex-row items-center justify-between">
-                    <h2 className="text-lg font-bold text-white">{category}</h2>
-                    <div className="flex items-center gap-2">
+            <div className='flex flex-col gap-3'>
+                <div className='flex flex-row items-center justify-between'>
+                    <h2 className='text-lg font-bold text-white'>{category}</h2>
+                    <div className='flex items-center gap-2'>
                         {!loading && (
                             <FaTrash
-                                className={'cursor-pointer'}
+                                className={"cursor-pointer"}
                                 onClick={handleDelete}
                             />
                         )}
                         {loading && (
-                            <div className="w-6 h-6 border-t-2 border-b-2  rounded-full animate-spin"></div>
+                            <div className='w-6 h-6 border-t-2 border-b-2  rounded-full animate-spin'></div>
                         )}
                         <Link to={`/transaction/${transaction._id}`}>
-                            <HiPencilAlt className="cursor-pointer" size={20} />
+                            <HiPencilAlt className='cursor-pointer' size={20} />
                         </Link>
                     </div>
                 </div>
-                <p className="text-white flex items-center gap-1">
+                <p className='text-white flex items-center gap-1'>
                     <BsCardText />
                     Description: {description}
                 </p>
-                <p className="text-white flex items-center gap-1">
+                <p className='text-white flex items-center gap-1'>
                     <MdOutlinePayments />
                     Payment Type: {paymentType}
                 </p>
-                <p className="text-white flex items-center gap-1">
+                <p className='text-white flex items-center gap-1'>
                     <FaSackDollar />
                     Amount: ${amount}
                 </p>
-                <p className="text-white flex items-center gap-1">
+                <p className='text-white flex items-center gap-1'>
                     <FaLocationDot />
-                    Location: {location || 'N/A'}
+                    Location: {location || "N/A"}
                 </p>
-                <div className="flex justify-between items-center">
+                <div className='flex justify-between items-center'>
                     <p
                         className={`text-xs  ${
                             formattedDate == formatDate(Date.now())
-                                ? 'text-gray-700'
-                                : 'text-black'
+                                ? "text-gray-700"
+                                : "text-black"
                         } font-bold`}
                     >
                         {formattedDate == formatDate(Date.now())
@@ -95,12 +95,12 @@ const Card = ({ transaction, authUser }) => {
                     </p>
                     <img
                         src={authUser?.profilePicture}
-                        className="h-8 w-8 border rounded-full"
-                        alt=""
+                        className='h-8 w-8 border rounded-full'
+                        alt=''
                     />
                 </div>
             </div>
         </div>
-    );
-};
-export default Card;
+    )
+}
+export default Card

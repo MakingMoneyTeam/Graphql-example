@@ -47,6 +47,6 @@ const transactionTypeDef = /* GraphQL */ `
         location: String
         date: String
     }
-`;
+`
 
-export default transactionTypeDef;
+export default transactionTypeDef
