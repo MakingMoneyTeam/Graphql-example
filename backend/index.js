@@ -10,6 +10,10 @@ import connectMongo from 'connect-mongodb-session';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import {
+    ApolloServerPluginLandingPageLocalDefault,
+    ApolloServerPluginLandingPageProductionDefault,
+} from '@apollo/server/plugin/landingPage/default';
 
 import { buildContext } from 'graphql-passport';
 
@@ -59,7 +63,15 @@ app.use(passport.session());
 const server = new ApolloServer({
     typeDefs: mergedTypeDefs,
     resolvers: mergedResolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    introspection: true,
+    plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        process.env.NODE_ENV === 'production'
+            ? ApolloServerPluginLandingPageLocalDefault({
+                  footer: false,
+              })
+            : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+    ],
 });
 
 // Ensure we wait for our server to start
@@ -70,7 +82,7 @@ await server.start();
 app.use(
     '/graphql',
     cors({
-        origin: 'http://localhost:3000',
+        origin: '*',
         credentials: true,
     }),
     express.json(),
